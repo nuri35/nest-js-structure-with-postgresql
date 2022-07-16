@@ -5,7 +5,7 @@ import { AuthService } from './auth.service';
 export class AuthControler {
   //   authService: AuthService; // private yaptıgım ıcın gerek yok ve constructor ıcındede yazmama gerek yok
   constructor(private authService: AuthService) {
-    //
+    //bu sekılde atamalar yapabılrız atanan tür kuralına göre
     // this.authService = 2; calısmaz
     // this.authService = authService; calısır geçerli olan parametre yoladıgımda
     // this.authService = {
@@ -16,11 +16,11 @@ export class AuthControler {
     /** */
   }
   @Post('signup')
-  signup() {
-    return 'ı am signup';
+  signup(): string {
+    return this.authService.signup();
   }
   @Post('signin')
-  signin() {
-    return 'ı am signin';
+  signin(): string {
+    return this.authService.signin();
   }
 }
