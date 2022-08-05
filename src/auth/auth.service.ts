@@ -39,38 +39,40 @@ export class AuthService {
 
   async signin(dto: AuthDto) {
     //login
-    const user = await this.prisma.user.findUnique({
-      where: { email: dto.email },
-    });
+    try {
+      const user = await this.prisma.user.findUnique({
+        where: { email: dto.email },
+      });
 
-    if (!user) {
-      throw new ForbiddenException('Credential incorrect');
+      if (!user) {
+        throw new ForbiddenException('Credential incorrect');
+      }
+
+      const pwMatch = await argon2.verify(user.hash, dto.password);
+
+      if (!pwMatch) {
+        throw new ForbiddenException('Credential incorrect');
+      }
+      return this.signToken(user.id, user.email);
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError) {
+        if (error.code === 'P2002') {
+          throw new ForbiddenException('Credentials taken');
+        }
+      }
+      throw error;
     }
-
-    const pwMatch = await argon2.verify(user.hash, dto.password);
-
-    if (!pwMatch) {
-      throw new ForbiddenException('Credential incorrect');
-    }
-    return this.signToken(user.id, user.email);
   }
 
-  async signToken(
-    userId: number,
-    email: string,
-  ): Promise<{ access_token: string }> {
+  signToken(userId: number, email: string): Promise<string> {
     const payload = {
       sub: userId,
       email,
     };
     const secret = this.config.get('JWT_SECRET');
-    const token = await this.jwt.signAsync(payload, {
+    return this.jwt.signAsync(payload, {
       expiresIn: '15m',
       secret: secret,
     });
-
-    return {
-      access_token: token,
-    };
   }
 }
