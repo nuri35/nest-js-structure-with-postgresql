@@ -24,5 +24,3 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
     return user; // req.user'a burdakı deger gelır
   }
 }
-
-//kal burda 2.11.dakıkada kal
