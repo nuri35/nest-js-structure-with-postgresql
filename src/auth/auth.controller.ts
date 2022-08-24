@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto';
 
@@ -16,10 +16,13 @@ export class AuthControler {
     // }; //calısır************* yada  tipi obje ıcınde fonks alıyor zaten this.authService.login(); desende calısıyor videoda gosterdi
     /** */
   }
+
   @Post('signup')
   signup(@Body() dto: AuthDto) {
     return this.authService.signup(dto);
   }
+
+  @HttpCode(HttpStatus.OK) //post request genelde 201 yollar onun ıcın OK yanı 200 status yaptık bunları senaryolara baglı olarak kullanawbılrsın
   @Post('signin')
   signin(@Body() dto: AuthDto) {
     return this.authService.signin(dto);
