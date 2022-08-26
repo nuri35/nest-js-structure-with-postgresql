@@ -1,9 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class UserService {
-  //   constructor() {}
-  //   async editUser(userId: number) {}
+  constructor(private prisma: PrismaService) {}
+  async editUser(userId: number) {}
 }
-
-//burda kal 3.06
